@@ -18,9 +18,20 @@
   </div>
 
   <!-- MAIN CARD -->
+  <div class="join-wrapper">
+
+  <!-- LEFT SIDE -->
+  <div class="join-left">
+      <img src="linkzo-logo.png" class="main-logo" alt="Linkzo Logo">
+      <h2 class="join-title">Linkzo Live</h2>
+      <p class="join-desc">
+        The Future of Real-Time Connection
+      </p>
+  </div>
+
+  <!-- RIGHT SIDE -->
   <div class="join-container join-card">
 
-    <h1 class="logo">Linkzo</h1>
     <p class="tagline">The Future of Real-Time Connection</p>
 
     <div class="join-field">
@@ -28,7 +39,7 @@
     </div>
 
     <div class="join-field">
-      <input type="text" id="roomId" placeholder="Enter Room ID" required>
+      <input type="text" id="roomId" placeholder="Enter Room ID" autocomplete="off" required>
     </div>
 
     <button class="join-btn" onclick="joinRoom()">Join Linkzo Live</button>
@@ -50,6 +61,6 @@ function joinRoom() {
   }
 }
 </script>
-
+</div> <!-- join-wrapper -->
 </body>
 </html>
