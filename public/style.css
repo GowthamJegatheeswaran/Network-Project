@@ -417,7 +417,6 @@ body {
 
 /* ===== FULLSCREEN MODE FIX ===== */
 
-/* ===== TRUE FULLSCREEN MODE ===== */
 
 :fullscreen .video-strip {
     display: none;

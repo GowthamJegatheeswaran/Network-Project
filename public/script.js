@@ -167,7 +167,11 @@ function createPeerConnection(userId) {
         if (document.getElementById("container-" + userId)) return;
 
         const remoteName = userNames[userId] || "Participant";
-        addVideoStream(event.streams[0], userId, remoteName);
+        const remoteStream = event.streams[0];
+
+if (remoteStream.getVideoTracks().length > 0) {
+    addVideoStream(remoteStream, userId, remoteName);
+}
     };
 
     peer.onicecandidate = (event) => {
@@ -204,7 +208,14 @@ function addVideoStream(stream, id, name) {
 video.srcObject = stream;
 video.autoplay = true;
 video.playsInline = true;
+video.setAttribute("playsinline", "");
 video.id = id;
+
+video.onloadedmetadata = () => {
+    video.play().catch(err => {
+        console.log("Video play error:", err);
+    });
+};
 
 if (id === "local") {
     video.classList.add("local-video");
