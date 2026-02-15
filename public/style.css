@@ -779,3 +779,13 @@ margin-right: 10px;
     border-bottom: 1px solid #e5e7eb;
     background: #ffffff;
 }
+
+.call-duration {
+    margin-left: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 12px;
+}

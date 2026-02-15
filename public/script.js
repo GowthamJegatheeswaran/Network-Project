@@ -12,6 +12,8 @@ let userNames = {};
 let localMuteStates = {};
 let localCameraStates = {};
 let focusedId = null;   // focus state
+let callSeconds = 0;
+let callTimerInterval = null;
 
 const configuration = {
     iceServers: [
@@ -187,6 +189,7 @@ if (!peer) {
     document.querySelector(".controls").style.opacity = "1";
 
 });
+startCallTimer();
 }
 
 function createPeerConnection(userId) {
@@ -530,6 +533,7 @@ function endCall() {
     localStream.getTracks().forEach(track => track.stop());
     Object.values(peers).forEach(peer => peer.close());
 
+    clearInterval(callTimerInterval);
     window.location.href = "/";
 }
 init();
@@ -648,4 +652,22 @@ function addParticipantItem(id, name) {
     `;
 
     list.appendChild(div);
+}
+
+function startCallTimer() {
+
+    const durationEl = document.getElementById("call-duration");
+
+    callTimerInterval = setInterval(() => {
+
+        callSeconds++;
+
+        const minutes = Math.floor(callSeconds / 60);
+        const seconds = callSeconds % 60;
+
+        durationEl.innerText =
+            `${String(minutes).padStart(2,'0')}:` +
+            `${String(seconds).padStart(2,'0')}`;
+
+    }, 1000);
 }
