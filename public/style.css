@@ -503,3 +503,7 @@ body {
 .participant-icons .fa-video-slash {
     color: #ef4444;
 }
+
+#local {
+    transform: scaleX(-1);
+}
