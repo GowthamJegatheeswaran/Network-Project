@@ -1,0 +1,479 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* ================= JOIN PAGE ================= */
+
+.join-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.join-container {
+    background: #1e1e1e;
+    padding: 50px 40px;
+    border-radius: 15px;
+    text-align: center;
+    width: 340px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    color: #7c4dff;
+}
+
+.tagline {
+    font-size: 14px;
+    color: #bbbbbb;
+    margin-bottom: 25px;
+}
+
+.join-container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: #2a2a2a;
+    color: white;
+}
+
+.join-container button {
+    width: 100%;
+    padding: 12px;
+    background: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.join-container button:hover {
+    background: #7c4dff;
+}
+
+/* ================= MEETING PAGE ================= */
+
+.meeting-body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #f3f4f6;
+    padding: 16px;
+}
+
+/* Top Bar */
+
+.top-bar {
+    background: white;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+#participant-count {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* ================= MAIN LAYOUT ================= */
+
+.main-container {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* ================= VIDEO GRID (DEFAULT) ================= */
+
+.video-grid {
+    display: flex;
+    gap: 12px;
+    padding: 6px 0;
+    overflow-x: auto;
+    transition: all 0.3s ease;
+}
+
+.video-container {
+    position: relative;
+    background: black;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* 🔥 Prevent zoom */
+    background: black;     /* Black bars */
+}
+
+/* ================= FOCUS MODE ================= */
+
+.video-grid.focus-mode {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Big video on top */
+
+.video-grid.focus-mode .video-container.focused {
+    width: 100%;
+    height: 65vh;   /* Large but not stretched */
+}
+
+/* Bottom row wrapper (created by JS) */
+
+.bottom-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+/* Bottom thumbnails */
+
+.bottom-row .video-container {
+    width: 220px;
+    height: 140px;
+    flex: 0 0 auto;
+}
+
+/* ================= LABELS & ICONS ================= */
+
+.video-label {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+
+    background: rgba(0, 0, 0, 0.55);
+    color: white;
+
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+
+    border-radius: 20px;
+    backdrop-filter: blur(6px);
+
+    z-index: 5;
+    pointer-events: none;
+}
+
+.mute-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 18px;
+    background: rgba(0,0,0,0.6);
+    padding: 4px;
+    border-radius: 50%;
+    z-index: 4;
+}
+
+.avatar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #e5e7eb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    color: #374151;
+    z-index: 1;
+}
+
+/* ================= CHAT PANEL ================= */
+
+.chat-panel {
+    width: 320px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #e5e7eb;
+    transition: width 0.3s ease;
+}
+
+.chat-panel.hidden {
+    width: 0;
+    overflow: hidden;
+    border-left: none;
+}
+
+.messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.chat-bubble {
+    background: #eef2ff;
+    color: #111827;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.chat-bubble strong {
+    color: #7c4dff;
+}
+
+/* Keep original chat input style */
+
+.chat-input {
+    display: flex;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    color: #111827;
+    border-radius: 8px 0 0 8px;
+}
+
+.chat-input button {
+    padding: 10px 16px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 8px 8px 0;
+}
+
+/* ================= CONTROLS ================= */
+
+.controls {
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.control-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: #f1f5f9;
+    color: #111827;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+    background: #e2e8f0;
+    transform: scale(1.05);
+}
+
+.end-call {
+    background: #ef4444;
+    color: white;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+    .main-container {
+        flex-direction: column;
+    }
+
+    .video-grid.focus-mode .video-container.focused {
+        height: 45vh;
+    }
+
+    .bottom-row .video-container {
+        width: 150px;
+        height: 100px;
+    }
+
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chat-panel {
+        position: absolute;
+        right: -100%;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* ================= VIDEO AREA (NEW UI STRUCTURE) ================= */
+
+.video-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 12px;
+    overflow: hidden;
+}
+
+/* BIG MAIN VIDEO */
+
+.main-video {
+    width: 100%;
+    height: 65vh;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.main-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* IMPORTANT CHANGE */
+    background: black;
+}
+
+/* SMALL VIDEO STRIP */
+
+.video-strip {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.video-strip .video-container {
+    width: 220px;
+    height: 140px;
+    flex: 0 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #e5e7eb;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+.fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.fullscreen-btn:hover {
+    background: rgba(0,0,0,0.7);
+}
+
+:fullscreen .main-video video {
+    object-fit: cover;
+}
+
+/* ===== FULLSCREEN MODE FIX ===== */
+
+/* ===== TRUE FULLSCREEN MODE ===== */
+
+:fullscreen .video-strip {
+    display: none;
+}
+
+:fullscreen .main-video {
+    height: 100vh;
+    width: 100vw;
+    border-radius: 0;
+}
+
+:fullscreen .video-area {
+    padding: 0;
+    gap: 0;
+}
+
+:fullscreen .main-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pip-btn {
+    position: absolute;
+    top: 12px;
+    right: 50px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.main-video .video-label {
+    font-size: 15px;
+    padding: 8px 14px;
+}
+
+.participants-panel {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px;
+}
+
+.participants-header {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.participants-list {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.participant-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f3f4f6;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.participant-icons {
+    display: flex;
+    gap: 6px;
+}
