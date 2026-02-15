@@ -610,7 +610,7 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 .join-wrapper {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 20px;
 
   max-width: 1200px;
@@ -633,8 +633,8 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 }
 
 .join-left {
-  flex: 1;
-  max-width: 420px;  /* FIXED WIDTH */
+  flex: 0 0 420px;   /* fixed width */
+  max-width: 420px;
   display: flex;
   flex-direction: column;
   justify-content: center;
