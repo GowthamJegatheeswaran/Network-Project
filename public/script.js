@@ -45,6 +45,8 @@ async function init() {
             }
         });
 
+        document.getElementById("messages").style.scrollBehavior = "smooth";
+
     socket.on("user-connected", (userId, remoteName) => {
 
     userNames[userId] = remoteName;
@@ -399,29 +401,36 @@ function addMessage(sender, message) {
 
     const messages = document.getElementById("messages");
 
-    const div = document.createElement("div");
+    const bubble = document.createElement("div");
 
-    // ✅ check if message is mine
     const isMe = sender === username;
 
-    // add correct side class
-    div.classList.add("chat-bubble");
-    div.classList.add(isMe ? "me" : "other");
+    bubble.classList.add("chat-bubble");
+    bubble.classList.add(isMe ? "me" : "other");
 
-    // group chat style
+    // message wrapper
     if (isMe) {
-        div.innerHTML = `${message}`;
+        bubble.innerHTML = `
+            <div class="chat-text">${message}</div>
+        `;
     } else {
-        div.innerHTML = `
+        bubble.innerHTML = `
             <div class="chat-name">${sender}</div>
-            ${message}
+            <div class="chat-text">${message}</div>
         `;
     }
 
-    messages.appendChild(div);
+    messages.appendChild(bubble);
+    bubble.style.opacity = "0";
+bubble.style.transform = "translateY(6px)";
+
+setTimeout(() => {
+    bubble.style.transition = "all 0.2s ease";
+    bubble.style.opacity = "1";
+    bubble.style.transform = "translateY(0)";
+}, 10);
     messages.scrollTop = messages.scrollHeight;
 }
-
 /* ================= MEDIA CONTROLS ================= */
 
 function toggleMute() {
@@ -614,7 +623,7 @@ function addParticipantItem(id, name) {
         : '<i class="fa-solid fa-video"></i>';
 
     div.innerHTML = `
-        <span>${name}</span>
+        <span class="participant-name">${name}</span>
         <span class="participant-icons">
             ${muteIcon} ${camIcon}
         </span>
