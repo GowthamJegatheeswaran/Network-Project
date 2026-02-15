@@ -504,6 +504,9 @@ body {
     color: #ef4444;
 }
 
-#local {
+/* ===== MIRROR LOCAL VIDEO EVERYWHERE ===== */
+
+/* mirror only local video */
+.local-video {
     transform: scaleX(-1);
 }

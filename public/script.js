@@ -206,6 +206,10 @@ video.autoplay = true;
 video.playsInline = true;
 video.id = id;
 
+if (id === "local") {
+    video.classList.add("local-video");
+}
+
 /* FIX ECHO FOR LOCAL USER */
 if (id === "local") video.muted = true;
 
@@ -261,7 +265,15 @@ const mainVideo = document.getElementById("mainVideo");
 const clickedVideo = document.getElementById(id);
 
 if (mainVideo && clickedVideo && clickedVideo.srcObject) {
+
     mainVideo.srcObject = clickedVideo.srcObject;
+
+    // ✅ mirror only when local video is main
+    if (id === "local") {
+        mainVideo.classList.add("local-video");
+    } else {
+        mainVideo.classList.remove("local-video");
+    }
 }
     if (focusedId === id) {
         removeFocusMode();
