@@ -7,6 +7,7 @@ document.getElementById("room-display").innerText = "Room: " + roomId;
 
 let localStream;
 let peers = {};
+let remoteStreams = {};
 let participantCount = 0;
 let userNames = {};
 let localMuteStates = {};
@@ -164,15 +165,24 @@ function createPeerConnection(userId) {
 
     peer.ontrack = (event) => {
 
-        if (document.getElementById("container-" + userId)) return;
+    // create stream for this user if not exists
+    if (!remoteStreams[userId]) {
+        remoteStreams[userId] = new MediaStream();
+    }
+
+    // add incoming track (audio or video)
+    remoteStreams[userId].addTrack(event.track);
+
+    // only create video when video track arrives
+    if (event.track.kind === "video") {
 
         const remoteName = userNames[userId] || "Participant";
-        const remoteStream = event.streams[0];
 
-if (remoteStream.getVideoTracks().length > 0) {
-    addVideoStream(remoteStream, userId, remoteName);
-}
-    };
+        if (!document.getElementById("container-" + userId)) {
+            addVideoStream(remoteStreams[userId], userId, remoteName);
+        }
+    }
+};
 
     peer.onicecandidate = (event) => {
         if (event.candidate) {
