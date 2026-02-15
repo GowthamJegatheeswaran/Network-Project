@@ -510,3 +510,9 @@ body {
 .local-video {
     transform: scaleX(-1);
 }
+
+/* mirror local preview everywhere */
+
+#mainVideo.local-video {
+  transform: scaleX(-1);
+}

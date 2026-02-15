@@ -235,6 +235,12 @@ const mainVideo = document.getElementById("mainVideo");
 
 if (mainVideo && !mainVideo.srcObject) {
     mainVideo.srcObject = stream;
+
+    if (id === "local") {
+        mainVideo.classList.add("local-video");
+    } else {
+        mainVideo.classList.remove("local-video");
+    }
 }
     // 🔥 VERY IMPORTANT FIX
     // Apply stored camera state AFTER video is added
