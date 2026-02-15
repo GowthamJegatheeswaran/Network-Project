@@ -72,24 +72,15 @@ if (count === 2 && !roomStartTimes[roomId]) {
 }
 
 // ✅ ADD THIS PART HERE
-// If timer already started, send to new user
-if (roomStartTimes[roomId]) {
+// If timer already running and this is NOT the 2nd user,
+// send existing timer to new user
+if (roomStartTimes[roomId] && count > 2) {
     socket.emit(
         "call-started",
         roomStartTimes[roomId]
     );
 }
         
-// ===== START CALL TIMER WHEN 2 USERS JOIN =====
-if (count === 2 && !roomStartTimes[roomId]) {
-
-    roomStartTimes[roomId] = Date.now();
-
-    io.to(roomId).emit(
-        "call-started",
-        roomStartTimes[roomId]
-    );
-}
 // 🔥 SEND EXISTING MUTE STATES
         Object.keys(muteStates).forEach((id) => {
             if (id !== socket.id) {
