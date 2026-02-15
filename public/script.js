@@ -215,7 +215,7 @@ if (id === "local") video.muted = true;
 
     const muteIcon = document.createElement("div");
     muteIcon.classList.add("mute-icon");
-    muteIcon.innerText = "🔇";
+    muteIcon.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>';
     muteIcon.id = "mute-" + id;
     muteIcon.style.display = localMuteStates[id] ? "block" : "none";
 
@@ -523,9 +523,13 @@ function addParticipantItem(id, name) {
     const div = document.createElement("div");
     div.className = "participant-item";
 
-    const muteIcon = localMuteStates[id] ? "🔇" : "🎤";
-    const camIcon =
-        localCameraStates[id] === false ? "📷❌" : "📷";
+    const muteIcon = localMuteStates[id]
+        ? '<i class="fa-solid fa-microphone-slash"></i>'
+        : '<i class="fa-solid fa-microphone"></i>';
+
+    const camIcon = localCameraStates[id] === false
+        ? '<i class="fa-solid fa-video-slash"></i>'
+        : '<i class="fa-solid fa-video"></i>';
 
     div.innerHTML = `
         <span>${name}</span>

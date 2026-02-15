@@ -185,13 +185,24 @@ body {
 
 .mute-icon {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    font-size: 18px;
-    background: rgba(0,0,0,0.6);
-    padding: 4px;
+    top: 10px;
+    right: 10px;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(239,68,68,0.9);
+    color: white;
+
     border-radius: 50%;
-    z-index: 4;
+    font-size: 13px;
+
+    backdrop-filter: blur(4px);
+    z-index: 5;
 }
 
 .avatar {
@@ -476,4 +487,19 @@ body {
 .participant-icons {
     display: flex;
     gap: 6px;
+}
+
+.participant-icons i {
+    font-size: 14px;
+    color: #374151;
+}
+
+/* muted = red */
+.participant-icons .fa-microphone-slash {
+    color: #ef4444;
+}
+
+/* camera off = red */
+.participant-icons .fa-video-slash {
+    color: #ef4444;
 }
