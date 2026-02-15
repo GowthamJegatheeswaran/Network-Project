@@ -611,7 +611,7 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 80px;
+  gap: 65px;
 
   max-width: 1200px;
   width: 100%;
@@ -633,7 +633,8 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 }
 
 .join-left {
-  flex: 0 0 420px;   /* FIXED WIDTH */
+  flex: 1;
+  max-width: 480px;  /* FIXED WIDTH */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -665,4 +666,5 @@ border-right: 1px solid rgba(0,0,0,0.06);
 
 .join-card {
   margin-top: 0;
+  margin-left: auto;
 }
