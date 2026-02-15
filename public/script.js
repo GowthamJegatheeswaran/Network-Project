@@ -120,6 +120,30 @@ if (!peer) {
     updateParticipantCount();
 });
 
+socket.on("call-started", (startTime) => {
+
+    // stop old timer if running
+    if (callTimerInterval) {
+        clearInterval(callTimerInterval);
+    }
+
+    const durationEl = document.getElementById("call-duration");
+
+    callTimerInterval = setInterval(() => {
+
+        const elapsedSeconds =
+            Math.floor((Date.now() - startTime) / 1000);
+
+        const minutes = Math.floor(elapsedSeconds / 60);
+        const seconds = elapsedSeconds % 60;
+
+        durationEl.innerText =
+            `${String(minutes).padStart(2,'0')}:` +
+            `${String(seconds).padStart(2,'0')}`;
+
+    }, 1000);
+});
+
     socket.on("mute-status", (userId, isMuted) => {
         localMuteStates[userId] = isMuted;
 
@@ -189,7 +213,6 @@ if (!peer) {
     document.querySelector(".controls").style.opacity = "1";
 
 });
-startCallTimer();
 }
 
 function createPeerConnection(userId) {

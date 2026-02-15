@@ -13,6 +13,7 @@ const io = new Server(server, {
 
 app.use(express.static("public"));
 
+let roomStartTimes = {};
 let users = {};
 let muteStates = {};
 let cameraStates = {};   // 🔥 NEW
@@ -58,7 +59,38 @@ socket.emit("existing-users", existingUsers);
 const count = roomData ? roomData.size : 1;
 
 io.to(roomId).emit("participant-count", count);
-        // 🔥 SEND EXISTING MUTE STATES
+
+// ===== START CALL TIMER WHEN 2 USERS JOIN =====
+if (count === 2 && !roomStartTimes[roomId]) {
+
+    roomStartTimes[roomId] = Date.now();
+
+    io.to(roomId).emit(
+        "call-started",
+        roomStartTimes[roomId]
+    );
+}
+
+// ✅ ADD THIS PART HERE
+// If timer already started, send to new user
+if (roomStartTimes[roomId]) {
+    socket.emit(
+        "call-started",
+        roomStartTimes[roomId]
+    );
+}
+        
+// ===== START CALL TIMER WHEN 2 USERS JOIN =====
+if (count === 2 && !roomStartTimes[roomId]) {
+
+    roomStartTimes[roomId] = Date.now();
+
+    io.to(roomId).emit(
+        "call-started",
+        roomStartTimes[roomId]
+    );
+}
+// 🔥 SEND EXISTING MUTE STATES
         Object.keys(muteStates).forEach((id) => {
             if (id !== socket.id) {
                 io.to(socket.id).emit("mute-status", id, muteStates[id]);
@@ -155,7 +187,11 @@ io.to(roomId).emit("participant-count", count);
            const roomData = io.sockets.adapter.rooms.get(user.roomId);
 const count = roomData ? roomData.size : 0;
 io.to(user.roomId).emit("participant-count", count);
-        });
+// reset timer when room empty
+if (count === 0) {
+    delete roomStartTimes[user.roomId];
+}       
+});
     });
 });
 
