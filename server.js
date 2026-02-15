@@ -35,7 +35,12 @@ io.on("connection", (socket) => {
 const room = io.sockets.adapter.rooms.get(roomId);
 
 const existingUsers = room
-    ? Array.from(room).filter(id => id !== socket.id)
+    ? Array.from(room)
+        .filter(id => id !== socket.id)
+        .map(id => ({
+            id: id,
+            username: users[id].username
+        }))
     : [];
 
 socket.emit("existing-users", existingUsers);

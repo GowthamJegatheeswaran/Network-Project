@@ -57,14 +57,20 @@ async function init() {
     renderParticipants();
 });
 socket.on("existing-users", (users) => {
-    users.forEach(userId => {
 
-        // only one side creates offer
-        if (socket.id < userId) {
-            connectToNewUser(userId);
+    users.forEach(user => {
+
+        // ✅ save username FIRST
+        userNames[user.id] = user.username;
+
+        // ✅ only one side creates offer
+        if (socket.id < user.id) {
+            connectToNewUser(user.id);
         }
 
     });
+
+    renderParticipants();
 });
 
     socket.on("offer", async (offer, userId, remoteName) => {
