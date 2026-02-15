@@ -328,23 +328,48 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
     border-left: none;
 }
 
+/* ===== LINKZO CHAT STYLE ===== */
+
 .messages {
     flex: 1;
-    padding: 10px;
+    padding: 14px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
+/* common bubble */
 .chat-bubble {
-    background: #eef2ff;
-    color: #111827;
-    padding: 8px 10px;
-    border-radius: 8px;
-    margin-bottom: 8px;
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 14px;
     font-size: 13px;
+    line-height: 1.4;
+    word-wrap: break-word;
 }
 
-.chat-bubble strong {
-    color: #7c4dff;
+/* OTHER USERS (LEFT SIDE) */
+.chat-bubble.other {
+    align-self: flex-start;
+    background: #f1f5f9;
+    color: #111827;
+    border-bottom-left-radius: 4px;
+}
+
+/* MY MESSAGE (RIGHT SIDE) */
+.chat-bubble.me {
+    align-self: flex-end;
+    background: linear-gradient(90deg, #1e88e5, #00c853);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+/* username (group chat style) */
+.chat-name {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 3px;
 }
 
 /* Keep original chat input style */

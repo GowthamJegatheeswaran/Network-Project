@@ -400,9 +400,23 @@ function addMessage(sender, message) {
     const messages = document.getElementById("messages");
 
     const div = document.createElement("div");
-    div.classList.add("chat-bubble");
 
-    div.innerHTML = `<strong>${sender}</strong><br>${message}`;
+    // ✅ check if message is mine
+    const isMe = sender === username;
+
+    // add correct side class
+    div.classList.add("chat-bubble");
+    div.classList.add(isMe ? "me" : "other");
+
+    // group chat style
+    if (isMe) {
+        div.innerHTML = `${message}`;
+    } else {
+        div.innerHTML = `
+            <div class="chat-name">${sender}</div>
+            ${message}
+        `;
+    }
 
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
