@@ -7,7 +7,6 @@ document.getElementById("room-display").innerText = "Room: " + roomId;
 
 let localStream;
 let peers = {};
-let remoteStreams = {};
 let participantCount = 0;
 let userNames = {};
 let localMuteStates = {};
@@ -47,13 +46,24 @@ async function init() {
         });
 
     socket.on("user-connected", (userId, remoteName) => {
+
     userNames[userId] = remoteName;
-    connectToNewUser(userId);
+
+    // ✅ Only ONE side creates offer
+    if (socket.id < userId) {
+        connectToNewUser(userId);
+    }
+
     renderParticipants();
 });
 socket.on("existing-users", (users) => {
     users.forEach(userId => {
-        connectToNewUser(userId);
+
+        // only one side creates offer
+        if (socket.id < userId) {
+            connectToNewUser(userId);
+        }
+
     });
 });
 
@@ -61,7 +71,11 @@ socket.on("existing-users", (users) => {
 
         userNames[userId] = remoteName;
 
-        const peer = createPeerConnection(userId);
+        let peer = peers[userId];
+
+if (!peer) {
+    peer = createPeerConnection(userId);
+}
 
         await peer.setRemoteDescription(new RTCSessionDescription(offer));
 
@@ -177,22 +191,11 @@ function createPeerConnection(userId) {
 
     peer.ontrack = (event) => {
 
-    // create stream for this user if not exists
-    if (!remoteStreams[userId]) {
-        remoteStreams[userId] = new MediaStream();
-    }
+    const remoteStream = event.streams[0];
+    const remoteName = userNames[userId] || "Participant";
 
-    // add incoming track (audio or video)
-    remoteStreams[userId].addTrack(event.track);
-
-    // only create video when video track arrives
-    if (event.track.kind === "video") {
-
-        const remoteName = userNames[userId] || "Participant";
-
-        if (!document.getElementById("container-" + userId)) {
-            addVideoStream(remoteStreams[userId], userId, remoteName);
-        }
+    if (!document.getElementById("container-" + userId)) {
+        addVideoStream(remoteStream, userId, remoteName);
     }
 };
 
@@ -231,11 +234,19 @@ video.srcObject = stream;
 video.autoplay = true;
 video.playsInline = true;
 video.setAttribute("playsinline", "");
+video.controls = false;
 video.id = id;
+
+/* IMPORTANT FIX */
+if (id === "local") {
+    video.muted = true;   // prevent echo
+} else {
+    video.muted = false;  // allow remote audio
+}
 
 video.onloadedmetadata = () => {
     video.play().catch(err => {
-        console.log("Video play error:", err);
+        console.log("Video play blocked:", err);
     });
 };
 
@@ -244,7 +255,7 @@ if (id === "local") {
 }
 
 /* FIX ECHO FOR LOCAL USER */
-if (id === "local") video.muted = true;
+
 
     const label = document.createElement("div");
     label.classList.add("video-label");
