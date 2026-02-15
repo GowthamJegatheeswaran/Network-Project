@@ -51,6 +51,11 @@ async function init() {
     connectToNewUser(userId);
     renderParticipants();
 });
+socket.on("existing-users", (users) => {
+    users.forEach(userId => {
+        connectToNewUser(userId);
+    });
+});
 
     socket.on("offer", async (offer, userId, remoteName) => {
 

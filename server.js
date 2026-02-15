@@ -27,18 +27,13 @@ io.on("connection", (socket) => {
         };
 
         // SEND EXISTING USERS TO NEW USER
-Object.keys(users).forEach((id) => {
+const room = io.sockets.adapter.rooms.get(roomId);
 
-    if (id !== socket.id &&
-        users[id].roomId === roomId) {
+const existingUsers = room
+    ? Array.from(room).filter(id => id !== socket.id)
+    : [];
 
-        io.to(socket.id).emit(
-            "user-connected",
-            id,
-            users[id].username
-        );
-    }
-});
+socket.emit("existing-users", existingUsers);
 
         // Default states
         muteStates[socket.id] = false;
@@ -49,8 +44,8 @@ Object.keys(users).forEach((id) => {
         // Notify others
         socket.to(roomId).emit("user-connected", socket.id, username);
 
-        const room = io.sockets.adapter.rooms.get(roomId);
-const count = room ? room.size : 1;
+        const roomData = io.sockets.adapter.rooms.get(roomId);
+const count = roomData ? roomData.size : 1;
 
 io.to(roomId).emit("participant-count", count);
         // 🔥 SEND EXISTING MUTE STATES
@@ -147,9 +142,8 @@ io.to(roomId).emit("participant-count", count);
             delete muteStates[socket.id];
             delete cameraStates[socket.id];
 
-            const room = io.sockets.adapter.rooms.get(user.roomId);
-const count = room ? room.size : 0;
-
+           const roomData = io.sockets.adapter.rooms.get(user.roomId);
+const count = roomData ? roomData.size : 0;
 io.to(user.roomId).emit("participant-count", count);
         });
     });
