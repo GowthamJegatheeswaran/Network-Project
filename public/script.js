@@ -288,6 +288,15 @@ const mainVideo = document.getElementById("mainVideo");
 if (mainVideo && !mainVideo.srcObject) {
     mainVideo.srcObject = stream;
 
+    // ✅ SET MAIN VIDEO NAME
+    const mainLabel = document.getElementById("mainVideoLabel");
+    if (mainLabel) {
+        mainLabel.innerText =
+            id === "local"
+                ? `You (${username})`
+                : name;
+    }
+
     if (id === "local") {
         mainVideo.classList.add("local-video");
     } else {
@@ -326,6 +335,15 @@ if (mainVideo && clickedVideo && clickedVideo.srcObject) {
 
     mainVideo.srcObject = clickedVideo.srcObject;
 
+    // ✅ UPDATE MAIN VIDEO LABEL
+const mainLabel = document.getElementById("mainVideoLabel");
+
+if (mainLabel) {
+    mainLabel.innerText =
+        id === "local"
+            ? `You (${username})`
+            : (userNames[id] || "Participant");
+}
     // ✅ mirror only when local video is main
     if (id === "local") {
         mainVideo.classList.add("local-video");
