@@ -96,7 +96,7 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 }
 
 .main-logo {
-  width: 180px;
+  width: 140px;
   margin-bottom: 12px;
   object-fit: contain;
   display: block;
@@ -611,7 +611,7 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
   display: flex;
   align-items: center;
   justify-content: center;   /* IMPORTANT CHANGE */
-  gap: 100px;                /* space between left & right */
+  gap: 70px;                /* space between left & right */
   max-width: 1200px;
   width: 100%;
   margin: auto;
@@ -627,19 +627,23 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 }
 .join-left .main-logo {
   margin-left: 0;
+  margin-right: 0;
 }
 
 
 .join-left h2 {
-  font-size: 34px;
+  font-size: 52px;   /* bigger title */
+  font-weight: 800;
   margin-top: 10px;
   color: #111827;
+  line-height: 1.1;
 }
 
 .join-left p {
   color: #6b7280;
-  margin-top: 10px;
-  font-size: 16px;
+  margin-top: 12px;
+  font-size: 18px;
+  max-width: 380px;
 }
 
 .join-card {
