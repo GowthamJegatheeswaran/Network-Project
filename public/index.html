@@ -1,36 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Connectify</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <title>Linkzo Live</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="join-body">
 
-<div class="join-container">
+  <!-- TOP HEADER -->
+  <div class="join-header">
+    <div class="join-brand">
+      <span class="join-brand-dot"></span>
+      <span class="join-brand-text">Linkzo Live</span>
+    </div>
+    <div class="join-header-right">Secure • HD • Real-time</div>
+  </div>
 
-    <h1 class="logo">Connectify</h1>
-    <p class="tagline">Seamless Real-Time Communication</p>
+  <!-- MAIN CARD -->
+  <div class="join-container join-card">
 
-    <input type="text" id="username" placeholder="Enter Your Name" required>
-    <input type="text" id="roomId" placeholder="Enter Room ID" required>
+    <h1 class="logo">Linkzo</h1>
+    <p class="tagline">The Future of Real-Time Connection</p>
 
-    <button onclick="joinRoom()">Join Room</button>
+    <div class="join-field">
+      <input type="text" id="username" placeholder="Enter your name" required>
+    </div>
 
-</div>
+    <div class="join-field">
+      <input type="text" id="roomId" placeholder="Enter Room ID" required>
+    </div>
+
+    <button class="join-btn" onclick="joinRoom()">Join Linkzo Live</button>
+
+    <p class="join-help">Share the Room ID with your team to connect instantly.</p>
+    <p class="join-footer">Powered by WebRTC</p>
+  </div>
 
 <script>
 function joinRoom() {
-    const name = document.getElementById("username").value.trim();
-    const room = document.getElementById("roomId").value.trim();
+  const name = document.getElementById("username").value.trim();
+  const room = document.getElementById("roomId").value.trim();
 
-    if(name && room){
-        localStorage.setItem("username", name);
-        window.location.href = `meeting.html?room=${room}`;
-    } else {
-        alert("Please enter your name and room ID");
-    }
+  if(name && room){
+    localStorage.setItem("username", name);
+    window.location.href = `meeting.html?room=${room}`;
+  } else {
+    alert("Please enter your name and room ID");
+  }
 }
 </script>
 
