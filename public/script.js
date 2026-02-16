@@ -16,6 +16,8 @@ let callSeconds = 0;
 let callTimerInterval = null;
 let isScreenSharing = false;
 let screenStream = null;
+let privateChatUserId = null;
+let privateChatUserName = null;
 
 const configuration = {
     iceServers: [
@@ -116,6 +118,16 @@ if (!peer) {
     socket.on("chat-message", (message, sender) => {
         addMessage(sender, message);
     });
+
+    socket.on("private-message", (message, sender) => {
+
+    if (sender === username) {
+        addMessage(sender, message);
+    } else {
+        addMessage(sender + " (Private)", message);
+    }
+
+});
 
     socket.on("participant-count", (count) => {
     participantCount = count;
@@ -480,11 +492,25 @@ function removeFocusMode() {
 /* ================= CHAT ================= */
 
 function sendMessage() {
+
     const input = document.getElementById("chat-message");
-    if (input.value.trim() !== "") {
+    if (input.value.trim() === "") return;
+
+    // PRIVATE MESSAGE
+    if (privateChatUserId) {
+
+        socket.emit("private-message", {
+            message: input.value,
+            targetId: privateChatUserId
+        });
+
+    } 
+    // GROUP MESSAGE
+    else {
         socket.emit("chat-message", input.value);
-        input.value = "";
     }
+
+    input.value = "";
 }
 
 function addMessage(sender, message) {
@@ -720,6 +746,24 @@ function addParticipantItem(id, name) {
         </span>
     `;
 
+    // ===== OPEN PRIVATE CHAT WHEN CLICKED =====
+div.onclick = () => {
+
+    // don't allow private chat with yourself
+    if (id === "local") {
+        switchToGroupChat();
+        return;
+    }
+
+    privateChatUserId = id;
+    privateChatUserName = name;
+
+    document.getElementById("chatTitle").innerText =
+    "Chat with " + name + " 🔒";
+
+document.getElementById("backToGroupBtn").style.display = "inline-block";
+};
+
     list.appendChild(div);
 }
 
@@ -829,4 +873,12 @@ if (localVideo) localVideo.style.display = "block";
 
     isScreenSharing = false;
     socket.emit("screen-share-status", false);
+}
+
+function switchToGroupChat() {
+    privateChatUserId = null;
+    privateChatUserName = null;
+
+    document.getElementById("chatTitle").innerText = "Chat";
+document.getElementById("backToGroupBtn").style.display = "none";
 }
