@@ -135,7 +135,6 @@ if (!peer) {
 
     socket.on("private-message", (message, sender, senderId) => {
 
-    // create storage if not exists
     if (!chatHistory.private[senderId]) {
         chatHistory.private[senderId] = [];
     }
@@ -145,19 +144,17 @@ if (!peer) {
         message
     });
 
-    // if private chat NOT open → show notification
-    if (privateChatUserId !== senderId) {
-
-        unreadPrivateMessages[senderId] =
-            (unreadPrivateMessages[senderId] || 0) + 1;
-
-        updateParticipantNotification(senderId);
-    }
-
-    // if already opened → show immediately
+    // ✅ if chat is OPEN → show message only
     if (privateChatUserId === senderId) {
         addMessage(sender + " (Private)", message);
+        return;
     }
+
+    // ✅ otherwise increase unread count
+    unreadPrivateMessages[senderId] =
+        (unreadPrivateMessages[senderId] || 0) + 1;
+
+    updateParticipantNotification(senderId);
 });
 
     socket.on("participant-count", (count) => {
