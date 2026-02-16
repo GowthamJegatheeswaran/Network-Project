@@ -162,6 +162,20 @@ if (roomStartTimes[roomId] && count > 2) {
             );
         });
 
+        // ================= SCREEN SHARE =================
+
+socket.on("screen-share-status", (isSharing) => {
+
+    const user = users[socket.id];
+    if (!user) return;
+
+    // send to everyone else in room
+    socket.to(user.roomId).emit(
+        "screen-share-status",
+        socket.id,
+        isSharing
+    );
+});
         // ================= DISCONNECT =================
 
         socket.on("disconnect", () => {

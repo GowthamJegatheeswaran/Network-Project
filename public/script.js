@@ -186,6 +186,35 @@ socket.on("call-started", (startTime) => {
         renderParticipants();
     });
 
+    socket.on("screen-share-status", (userId, isSharing) => {
+
+    const mainVideo = document.getElementById("mainVideo");
+    const mainLabel = document.getElementById("mainVideoLabel");
+
+    if (!mainVideo || !mainLabel) return;
+
+    // check which stream is currently shown as main video
+    const currentVideo = document.getElementById(userId);
+
+    if (!currentVideo) return;
+
+    // if that user's video is currently focused
+    if (mainVideo.srcObject === currentVideo.srcObject) {
+
+        if (isSharing) {
+            mainLabel.innerText =
+                `${userNames[userId] || "Participant"} - Screen`;
+
+            // screen should not be mirrored
+            mainVideo.classList.remove("local-video");
+
+        } else {
+            mainLabel.innerText =
+                userNames[userId] || "Participant";
+        }
+    }
+});
+
     socket.on("user-disconnected", (userId) => {
 
         if (peers[userId]) {
@@ -747,6 +776,8 @@ document.getElementById("mainVideoLabel").innerText =
 
             isScreenSharing = true;
 
+            socket.emit("screen-share-status", true);
+
             // hide local camera thumbnail
 const localVideo = document.getElementById("local");
 if (localVideo) localVideo.style.display = "none";
@@ -797,4 +828,5 @@ if (localVideo) localVideo.style.display = "block";
     }
 
     isScreenSharing = false;
+    socket.emit("screen-share-status", false);
 }
