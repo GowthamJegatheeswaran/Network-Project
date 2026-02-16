@@ -14,6 +14,8 @@ let localCameraStates = {};
 let focusedId = null;   // focus state
 let callSeconds = 0;
 let callTimerInterval = null;
+let isScreenSharing = false;
+let screenStream = null;
 
 const configuration = {
     iceServers: [
@@ -706,4 +708,69 @@ function startCallTimer() {
             `${String(seconds).padStart(2,'0')}`;
 
     }, 1000);
+}
+
+async function toggleScreenShare() {
+
+    try {
+
+        // ===== START SCREEN SHARE =====
+        if (!isScreenSharing) {
+
+            screenStream = await navigator.mediaDevices.getDisplayMedia({
+                video: true
+            });
+
+            const screenTrack = screenStream.getVideoTracks()[0];
+
+            // replace video track for all peers
+            Object.values(peers).forEach(peer => {
+
+                const sender = peer.getSenders()
+                    .find(s => s.track.kind === "video");
+
+                if (sender) sender.replaceTrack(screenTrack);
+            });
+
+            // change main video locally
+            document.getElementById("mainVideo").srcObject = screenStream;
+
+            isScreenSharing = true;
+
+            // when user clicks "Stop sharing"
+            screenTrack.onended = () => {
+                stopScreenShare();
+            };
+
+        }
+
+        // ===== STOP SCREEN SHARE =====
+        else {
+            stopScreenShare();
+        }
+
+    } catch (err) {
+        console.log("Screen share error:", err);
+    }
+}
+
+function stopScreenShare() {
+
+    const cameraTrack = localStream.getVideoTracks()[0];
+
+    Object.values(peers).forEach(peer => {
+
+        const sender = peer.getSenders()
+            .find(s => s.track.kind === "video");
+
+        if (sender) sender.replaceTrack(cameraTrack);
+    });
+
+    document.getElementById("mainVideo").srcObject = localStream;
+
+    if (screenStream) {
+        screenStream.getTracks().forEach(t => t.stop());
+    }
+
+    isScreenSharing = false;
 }
