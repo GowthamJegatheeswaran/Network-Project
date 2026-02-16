@@ -199,7 +199,7 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 }
 
 .header-logo {
-    height: 40px;   /* control header height */
+    height: 55px;   /* control header height */
     width: auto;
     object-fit: contain;
     display: block;
@@ -208,7 +208,7 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 
 /* app title */
 .app-title {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: 0.3px;
 
