@@ -213,6 +213,19 @@ socket.on("call-started", (startTime) => {
     document.querySelector(".controls").style.opacity = "1";
 
 });
+document.addEventListener("fullscreenchange", () => {
+
+    const videoStrip = document.querySelector(".video-strip");
+    const controls = document.querySelector(".controls");
+    const header = document.querySelector(".top-bar");
+
+    // if exited fullscreen
+    if (!document.fullscreenElement) {
+        videoStrip.style.display = "flex";
+        controls.style.display = "flex";
+        header.style.display = "flex";
+    }
+});
 }
 
 function createPeerConnection(userId) {
