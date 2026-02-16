@@ -74,7 +74,7 @@ if (count === 2 && !roomStartTimes[roomId]) {
 // ✅ ADD THIS PART HERE
 // If timer already running and this is NOT the 2nd user,
 // send existing timer to new user
-if (roomStartTimes[roomId] && count > 2) {
+if (roomStartTimes[roomId]) {
     socket.emit(
         "call-started",
         roomStartTimes[roomId]
