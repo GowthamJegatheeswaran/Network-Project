@@ -234,9 +234,11 @@ function createPeerConnection(userId) {
 
     const peer = new RTCPeerConnection(configuration);
 
-    localStream.getTracks().forEach(track => {
-        peer.addTrack(track, localStream);
-    });
+    const streamToSend = isScreenSharing ? screenStream : localStream;
+
+streamToSend.getTracks().forEach(track => {
+    peer.addTrack(track, streamToSend);
+});
 
     peer.ontrack = (event) => {
 
@@ -733,9 +735,21 @@ async function toggleScreenShare() {
             });
 
             // change main video locally
-            document.getElementById("mainVideo").srcObject = screenStream;
+            const mainVideo = document.getElementById("mainVideo");
+mainVideo.srcObject = screenStream;
+
+// screen share should NEVER be mirrored
+mainVideo.classList.remove("local-video");
+
+// update label
+document.getElementById("mainVideoLabel").innerText =
+    `You (${username}) - Screen`;
 
             isScreenSharing = true;
+
+            // hide local camera thumbnail
+const localVideo = document.getElementById("local");
+if (localVideo) localVideo.style.display = "none";
 
             // when user clicks "Stop sharing"
             screenTrack.onended = () => {
@@ -766,7 +780,17 @@ function stopScreenShare() {
         if (sender) sender.replaceTrack(cameraTrack);
     });
 
-    document.getElementById("mainVideo").srcObject = localStream;
+    const mainVideo = document.getElementById("mainVideo");
+mainVideo.srcObject = localStream;
+
+// restore mirror for local camera
+mainVideo.classList.add("local-video");
+
+document.getElementById("mainVideoLabel").innerText =
+    `You (${username})`;
+
+const localVideo = document.getElementById("local");
+if (localVideo) localVideo.style.display = "block";
 
     if (screenStream) {
         screenStream.getTracks().forEach(t => t.stop());
