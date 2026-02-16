@@ -199,7 +199,7 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 }
 
 .header-logo {
-    height: 40px;   /* control header height */
+    height: 50px;   /* control header height */
     width: auto;
     object-fit: contain;
     display: block;
