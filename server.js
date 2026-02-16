@@ -130,6 +130,24 @@ if (roomStartTimes[roomId]) {
             );
         });
 
+        // ================= PRIVATE CHAT =================
+
+socket.on("private-message", (data) => {
+
+    const user = users[socket.id];
+    if (!user) return;
+
+    const { message, targetId } = data;
+
+    // send only to selected user
+    io.to(targetId).emit(
+        "private-message",
+        message,
+        user.username,
+        socket.id
+    );
+});
+
         // ================= MUTE =================
 
         socket.on("mute-status", (isMuted) => {
