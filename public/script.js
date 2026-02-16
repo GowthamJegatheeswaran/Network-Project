@@ -18,6 +18,12 @@ let isScreenSharing = false;
 let screenStream = null;
 let privateChatUserId = null;
 let privateChatUserName = null;
+let chatHistory = {
+    group: [],
+    private: {}
+};
+
+let unreadPrivateMessages = {};
 
 const configuration = {
     iceServers: [
@@ -116,17 +122,42 @@ if (!peer) {
     });
 
     socket.on("chat-message", (message, sender) => {
-        addMessage(sender, message);
-    });
 
-    socket.on("private-message", (message, sender) => {
+    // avoid duplicate for sender
+    if (sender === username) return;
 
-    if (sender === username) {
+    chatHistory.group.push({ sender, message });
+
+    if (!privateChatUserId) {
         addMessage(sender, message);
-    } else {
-        addMessage(sender + " (Private)", message);
+    }
+});
+
+    socket.on("private-message", (message, sender, senderId) => {
+
+    // create storage if not exists
+    if (!chatHistory.private[senderId]) {
+        chatHistory.private[senderId] = [];
     }
 
+    chatHistory.private[senderId].push({
+        sender,
+        message
+    });
+
+    // if private chat NOT open → show notification
+    if (privateChatUserId !== senderId) {
+
+        unreadPrivateMessages[senderId] =
+            (unreadPrivateMessages[senderId] || 0) + 1;
+
+        updateParticipantNotification(senderId);
+    }
+
+    // if already opened → show immediately
+    if (privateChatUserId === senderId) {
+        addMessage(sender + " (Private)", message);
+    }
 });
 
     socket.on("participant-count", (count) => {
@@ -497,18 +528,38 @@ function sendMessage() {
     if (input.value.trim() === "") return;
 
     // PRIVATE MESSAGE
-    if (privateChatUserId) {
+   if (privateChatUserId) {
 
-        socket.emit("private-message", {
-            message: input.value,
-            targetId: privateChatUserId
-        });
+    // store locally immediately
+    if (!chatHistory.private[privateChatUserId]) {
+        chatHistory.private[privateChatUserId] = [];
+    }
 
-    } 
+    chatHistory.private[privateChatUserId].push({
+        sender: username,
+        message: input.value
+    });
+
+    addMessage(username, input.value);
+
+    socket.emit("private-message", {
+        message: input.value,
+        targetId: privateChatUserId
+    });
+}
     // GROUP MESSAGE
     else {
-        socket.emit("chat-message", input.value);
-    }
+
+    // store locally first
+    chatHistory.group.push({
+        sender: username,
+        message: input.value
+    });
+
+    addMessage(username, input.value);
+
+    socket.emit("chat-message", input.value);
+}
 
     input.value = "";
 }
@@ -545,7 +596,12 @@ setTimeout(() => {
     bubble.style.opacity = "1";
     bubble.style.transform = "translateY(0)";
 }, 10);
+    const isNearBottom =
+    messages.scrollHeight - messages.scrollTop - messages.clientHeight < 50;
+
+if (isNearBottom) {
     messages.scrollTop = messages.scrollHeight;
+}
 }
 /* ================= MEDIA CONTROLS ================= */
 
@@ -730,6 +786,7 @@ function addParticipantItem(id, name) {
 
     const div = document.createElement("div");
     div.className = "participant-item";
+div.setAttribute("data-user", id);
 
     const muteIcon = localMuteStates[id]
         ? '<i class="fa-solid fa-microphone-slash"></i>'
@@ -749,19 +806,26 @@ function addParticipantItem(id, name) {
     // ===== OPEN PRIVATE CHAT WHEN CLICKED =====
 div.onclick = () => {
 
-    // don't allow private chat with yourself
+    // ❌ do not allow private chat with yourself
     if (id === "local") {
         switchToGroupChat();
         return;
     }
 
+    // ✅ OPEN PRIVATE CHAT FIRST
     privateChatUserId = id;
     privateChatUserName = name;
 
     document.getElementById("chatTitle").innerText =
-    "Chat with " + name + " 🔒";
+        "Chat with " + name + " 🔒";
 
-document.getElementById("backToGroupBtn").style.display = "inline-block";
+    document.getElementById("backToGroupBtn").style.display = "inline-block";
+
+    loadChatMessages();
+
+    // ✅ RESET BADGE ONLY AFTER CHAT OPENED
+    unreadPrivateMessages[id] = 0;
+    updateParticipantNotification(id);
 };
 
     list.appendChild(div);
@@ -881,4 +945,54 @@ function switchToGroupChat() {
 
     document.getElementById("chatTitle").innerText = "Chat";
 document.getElementById("backToGroupBtn").style.display = "none";
+loadChatMessages();
+}
+
+function updateParticipantNotification(userId) {
+
+    const item = document.querySelector(
+        `[data-user="${userId}"]`
+    );
+
+    if (!item) return;
+
+    let badge = item.querySelector(".msg-badge");
+    const count = unreadPrivateMessages[userId] || 0;
+
+    // REMOVE badge if no unread messages
+    if (count === 0) {
+        if (badge) badge.remove();
+        return;
+    }
+
+    // CREATE badge if needed
+    if (!badge) {
+        badge = document.createElement("span");
+        badge.className = "msg-badge";
+        item.appendChild(badge);
+    }
+
+    badge.innerText = count;
+}
+
+function loadChatMessages() {
+
+    const messages = document.getElementById("messages");
+    messages.innerHTML = "";
+
+    // GROUP CHAT
+    if (!privateChatUserId) {
+        chatHistory.group.forEach(m =>
+            addMessage(m.sender, m.message)
+        );
+        return;
+    }
+
+    // PRIVATE CHAT
+    const history = chatHistory.private[privateChatUserId] || [];
+
+    history.forEach(m =>
+        addMessage(m.sender, m.message)
+    );
+    document.getElementById("chat-message").focus();
 }
