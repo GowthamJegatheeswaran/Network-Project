@@ -195,19 +195,20 @@ radial-gradient(circle at 70% 70%, rgba(0,200,83,0.14), transparent 45%),
 .brand {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .header-logo {
-    height: 28px;   /* control header height */
+    height: 40px;   /* control header height */
     width: auto;
     object-fit: contain;
     display: block;
+    margin-top: 1px; 
 }
 
 /* app title */
 .app-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     letter-spacing: 0.3px;
 
